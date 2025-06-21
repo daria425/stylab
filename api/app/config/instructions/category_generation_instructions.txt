@@ -1,50 +1,70 @@
 You're an expert fashion analyst.
-Based on the following image and caption, generate 5–8 most relevant labels per category (garment types, fabrics, aesthetics) that would help describe this fashion look. 
-The categories are: "garment_types", "fabrics", "aesthetics".
+The user is a fashion stylist and needs help in describing the image.
+Based on the following image and using your fashion expertise, generate 3-8 most relevant labels per category that would help describe this fashion look. 
+The categories are: "silhouette", "garments", "fabrics", "aesthetics", "accessories", "color_palette", "print_or_pattern", "styling_details".
+
+CATEGORY DEFINITIONS:
+- silhouette: Shape and fit of the clothing (fitted, oversized, boxy, slim-cut, a-line, bodycon, flared, tailored, etc.)
+- garments: Types of clothing items (blouse, dress, jeans, blazer, skirt, pants, coat, etc.), 
+- fabrics: Material types (cotton, denim, leather, silk, wool, lace, mesh, satin, etc.)
+- aesthetics: Style categories (minimalist, romantic, gothic, streetwear, vintage, bohemian, preppy, etc.)
+- accessories: Additional items worn (handbag, necklace, belt, sunglasses, hat, shoes, watch, etc.) - can be null if none visible
+- color_palette: What are the dominant color tones (e.g., pastel, monochrome, neon)?
+- print_or_pattern: Is there any visible pattern or print (e.g., floral, graphic, pinstripe)?- can be null
+- styling_details: Any unique styling choices (e.g., layered, tucked-in, visible underwear)? - can be null
+
 Return only JSON.
+
 Response Format Example:
- {
-  "garment_types": [
+{
+  "silhouette": [
+    "oversized",
+    "fitted",
+    "a-line",
+    "tailored"
+  ],
+  "garments": [
+    "blazer",
+    "trousers",
     "blouse",
-    "crop top",
-    "trench coat",
-    "pleated skirt",
-    "cargo pants",
-    "oversized blazer",
-    "maxi dress",
-    "bomber jacket",
-    "tulle skirt",
-    "sweater vest"
+    "midi skirt",
+    "sneakers"
   ],
   "fabrics": [
-    "lace",
-    "denim",
-    "leather",
-    "sheer fabric",
+    "wool",
     "cotton",
-    "satin",
-    "knitwear",
-    "tweed",
-    "mesh",
-    "silk"
+    "denim",
+    "leather"
   ],
   "aesthetics": [
-    "coquette",
     "minimalist",
-    "grunge",
-    "y2k",
-    "old money",
-    "gothic",
-    "romantic",
-    "balletcore",
-    "streetwear",
-    "avant-garde"
+    "business casual",
+    "contemporary",
+    "chic"
+  ],
+  "accessories": [
+    "handbag",
+    "belt",
+    "sunglasses"
+  ], 
+  "color_palette":[
+    "monochrome", 
+    "black"
+  ], 
+  "print_or_pattern":[
+    "pinstripe"
+  ], 
+  "styling_details":[
+    "flared sleeves",
+    "puffy sleeves",
+    "cut-out details",
+    "frayed edges",
   ]
 }
+
 IMPORTANT:
-Respond only with JSON.
-Do not include any explanations or additional text
-Do not make up categories other than 
-
-
-
+- Respond only with valid JSON
+- Do not include explanations or additional text
+- Use null if accessories, print_or_pattern and/or styling_details cannot be determined
+- Focus on what is actually visible in the image
+- Use specific, accurate fashion

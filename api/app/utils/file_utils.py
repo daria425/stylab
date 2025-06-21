@@ -1,5 +1,6 @@
 from PIL import Image
 import requests
+from pathlib import Path
 from io import BytesIO
 def fetch_image(url: str, convert_rgb:bool=False) -> Image.Image:
     response = requests.get(url)
@@ -15,6 +16,8 @@ def load_txt_instuctions(file_path: str) -> str:
     :param file_path: Path to the text file containing instructions.
     :return: Content of the text file as a string.
     """
+    CONFIG_DIR=Path("app/config")
+    file_path = CONFIG_DIR / file_path
     try:
         with open(file_path, 'r') as file:
             instructions = file.read()

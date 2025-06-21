@@ -1,16 +1,22 @@
 from openai import OpenAI
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Union
 import os
+import json
 from dotenv import load_dotenv
 from app.utils.file_utils import load_txt_instuctions
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-category_gen_instruction_file_path="app/config/instructions/category_generation_instructions.txt"
+category_gen_instruction_file_path="instructions/category_generation_instructions.txt"
 client= OpenAI(api_key=OPENAI_API_KEY)
 
 class FashionClassificationCategories(BaseModel):
+    silhouette: List[str] = Field(
+        ..., 
+        description="List of keywords describing the silhouette present in the image", 
+        examples=["fitted", "oversized", "boxy", "slim-cut", "a-line", "bodycon", "flared", "tailored"]
+    )
     garments: List[str] = Field(
 ..., description="List of garment categories in the image for fashion classification.", 
     )
@@ -20,6 +26,44 @@ class FashionClassificationCategories(BaseModel):
     aesthetics: List[str] = Field(
         ..., description="List of aesthetic styles relating to the image for fashion classification."
     )
+    accessories: Union[List[str], None] = Field(
+        ..., 
+        description="A list of keywords describing accessories present in the image if any", 
+        examples=["handbag", "necklace", "earrings", "belt", "scarf", "sunglasses", "hat", "watch", "bracelet", "ring"]
+    )
+    color_palette: List[str]= Field(
+        ..., 
+        description="A list of colors present in the image for fashion classification.", 
+        examples=[    "monochrome",
+    "pastel",
+    "vibrant",
+    "earthy",
+    "neon",
+    "muted",
+    "bold",
+    "subtle",
+    "rich",
+    "warm",
+    "cool",
+    "neutral",
+    "metallic",
+    "dark",
+    "light",
+    "soft"]
+    )
+    print_or_pattern:Union[List[str], None] = Field(
+        ..., 
+        description="A list of prints or patterns present in the image for fashion classification.", 
+        examples=["floral", "striped", "polka dot", "plaid", "paisley", "animal print", "geometric", "abstract", "tie-dye", "camouflage"]
+    )
+    styling_details: Union[List[str], None] = Field(
+        ..., 
+        description="A list of styling details present in the image for fashion classification.", 
+        examples=["layered", "asymmetrical", "pleated", "ruffled", "embroidered", "cropped", "high-waisted", "oversized sleeves", "cut-out", "peplum"]
+    )
+
+
+
 
 def generate_categories(image_url:str):
     system_instruction = load_txt_instuctions(category_gen_instruction_file_path)
@@ -33,7 +77,7 @@ def generate_categories(image_url:str):
             "content":[
                 {
                     "type": "input_text",
-                    "text": f"Generate a list of categories for a detailed description of the provided image. The categories should include garments, fabrics, and aesthetics."
+                    "text": f"Generate a list of categories for a detailed description of the provided image. "
                 }, 
                 {
                     "type": "input_image",
@@ -55,8 +99,12 @@ def generate_categories(image_url:str):
                 "schema": schema}
         }
     )
-    print(response)
+    output_text=response.output_text
+    json_output=json.loads(output_text)
+    return json_output
 
 
-img_url="https://i.pinimg.com/236x/91/cd/df/91cddf7888d9151ddcbc0435da0de97e.jpg"
-generate_categories(img_url)
+# Example usage:
+# image_url="https://i.pinimg.com/236x/91/cd/df/91cddf7888d9151ddcbc0435da0de97e.jpg"
+# categories= generate_categories(image_url)
+# print(categories)

@@ -1,50 +1,17 @@
 
 from transformers import CLIPProcessor, CLIPModel
 import torch
+from app.services.llm_service import generate_categories
+from app.utils.file_utils import fetch_image
+from app.utils.logger import logger
 sample_data={
     "title": "Sacai Spring 2025 Menswear Fashion Show | Vogue Street Casual, Summer 2025 Runway, Denim Street Style 2025, Denim Spring Summer 2025, Denim Spring 2025, Sacai Spring 2023 Ready To Wear, Sacai Runway, Jeans Trend, Trendy Fall Fashion",
     "url": "/pin/3729612256806176/",
     "img": "https://i.pinimg.com/236x/91/cd/df/91cddf7888d9151ddcbc0435da0de97e.jpg"
   }
 
-label_dictionary = {
-  "garment_types": [
-    "blouse",
-    "crop top",
-    "trench coat",
-    "pleated skirt",
-    "cargo pants",
-    "oversized blazer",
-    "maxi dress",
-    "bomber jacket",
-    "tulle skirt",
-    "sweater vest"
-  ],
-  "fabrics": [
-    "lace",
-    "denim",
-    "leather",
-    "sheer fabric",
-    "cotton",
-    "satin",
-    "knitwear",
-    "tweed",
-    "mesh",
-    "silk"
-  ],
-  "aesthetics": [
-    "coquette",
-    "minimalist",
-    "grunge",
-    "y2k",
-    "old money",
-    "gothic",
-    "romantic",
-    "balletcore",
-    "streetwear",
-    "avant-garde"
-  ]
-}
+
+
 
 
 class FashionClassifier:
@@ -61,16 +28,35 @@ class FashionClassifier:
         top_idx = torch.argmax(probs, dim=1).item()
         top_label = labels[top_idx]
         confidence = probs[0, top_idx].item()
+        label_results = {label: prob.item() for label, prob in zip(labels, probs[0])}
         print(f"Label results: {list(zip(labels, probs[0].tolist()))}")
         print(f"Top match: {top_label} ({confidence:.2%} confidence)")
-        return top_label, confidence
+        return top_label, confidence, label_results
     
-    def process_label_classification(self, image, label_dictionary):
+    def process_label_classification(self, image_url):
         results = {}
+        label_dictionary = generate_categories(image_url)
+        logger.info(f"Generated categories: {label_dictionary}")
+        image= fetch_image(image_url, convert_rgb=True)
         for category, labels in label_dictionary.items():
-            top_label, confidence = self.classify_fashion_image(image, labels)
+            if not labels:
+                results[category] = {
+                    "top_label": None,
+                    "confidence": None,
+                    "label_results": {}
+                }
+                continue
+            top_label, confidence, label_results = self.classify_fashion_image(image, labels)
             results[category] = {
                 "top_label": top_label,
-                "confidence": confidence
+                "confidence": confidence, 
+                "label_results": label_results
             }
         return results
+    
+# Example usage:
+# classifier = FashionClassifier()
+# image_url = sample_data["img"]
+# results = classifier.process_label_classification(image_url)
+# print("Classification Results:")
+# print(results)
