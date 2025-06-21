@@ -1,4 +1,3 @@
-from app.utils.file_utils import fetch_image
 
 from transformers import CLIPProcessor, CLIPModel
 import torch
@@ -66,9 +65,12 @@ class FashionClassifier:
         print(f"Top match: {top_label} ({confidence:.2%} confidence)")
         return top_label, confidence
     
-image= fetch_image(sample_data["img"], convert_rgb=True)
-fashion_classifier = FashionClassifier()
-for category, labels in label_dictionary.items():
-    print(f"Classifying {category}...")
-    top_label, confidence = fashion_classifier.classify_fashion_image(image, labels)
-    print(f"Top {category} match: {top_label} with confidence {confidence:.2%}\n")
+    def process_label_classification(self, image, label_dictionary):
+        results = {}
+        for category, labels in label_dictionary.items():
+            top_label, confidence = self.classify_fashion_image(image, labels)
+            results[category] = {
+                "top_label": top_label,
+                "confidence": confidence
+            }
+        return results

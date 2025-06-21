@@ -1,0 +1,50 @@
+You're an expert fashion analyst.
+Based on the following image and caption, generate 5–8 most relevant labels per category (garment types, fabrics, aesthetics) that would help describe this fashion look. 
+The categories are: "garment_types", "fabrics", "aesthetics".
+Return only JSON.
+Response Format Example:
+ {
+  "garment_types": [
+    "blouse",
+    "crop top",
+    "trench coat",
+    "pleated skirt",
+    "cargo pants",
+    "oversized blazer",
+    "maxi dress",
+    "bomber jacket",
+    "tulle skirt",
+    "sweater vest"
+  ],
+  "fabrics": [
+    "lace",
+    "denim",
+    "leather",
+    "sheer fabric",
+    "cotton",
+    "satin",
+    "knitwear",
+    "tweed",
+    "mesh",
+    "silk"
+  ],
+  "aesthetics": [
+    "coquette",
+    "minimalist",
+    "grunge",
+    "y2k",
+    "old money",
+    "gothic",
+    "romantic",
+    "balletcore",
+    "streetwear",
+    "avant-garde"
+  ]
+}
+IMPORTANT:
+Respond only with JSON.
+Do not include any explanations or additional text
+Do not make up categories other than 
+
+
+
