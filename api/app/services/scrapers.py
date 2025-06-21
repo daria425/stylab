@@ -30,7 +30,7 @@ class BaseScraper(ABC):
         )
         context=await browser.new_context(
             user_agent=self.user_agent,
-            # viewport={"width": 1280, "height": 800},
+            viewport={"width": 1280, "height": 800},
         )
         page=await context.new_page()
         return playwright_client, browser, context, page
@@ -110,11 +110,12 @@ class PinterestScraper(BaseScraper):
         logger.info(f"Scraped {len(scraped_data)} pins for query: {self.query}")
         return scraped_data
 
-current_year=datetime.now().year
-query=f"fashion trends {current_year}"
-scraper = PinterestScraper(query=query, num_scrols=3)
-async def main():
-    results = await scraper.scrape(save_results=True)
-    print(json.dumps(results, indent=2))
+# Example usage:
+# current_year=datetime.now().year
+# query=f"street style trends {current_year}"
+# scraper = PinterestScraper(query=query, num_scrols=3)
+# async def main():
+#     results = await scraper.scrape(save_results=True)
+#     print(json.dumps(results, indent=2))
 
-asyncio.run(main())
+# asyncio.run(main())
