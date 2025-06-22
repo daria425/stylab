@@ -43,9 +43,24 @@ Response Format Example:
     "chic"
   ],
   "accessories": [
-    "handbag",
-    "belt",
-    "sunglasses"
+"silver necklace",
+    "leather belt",
+    "silk scarf",
+    "platinum watch",
+    "diamond ring",
+    "pearl earrings",
+    "suede gloves",
+    "chunky bracelet",
+    "cashmere shawl",
+    "tote bag",
+    "oversized sunglasses",
+    "wide-brim hat",
+    "vintage brooch",
+    "floral hair clip",
+    "leather wallet",
+    "beaded clutch",
+    "fur stole",
+    "canvas backpack",
   ], 
   "color_palette":[
     "monochrome", 

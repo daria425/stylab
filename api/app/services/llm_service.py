@@ -1,6 +1,6 @@
 from openai import OpenAI
 from pydantic import BaseModel, Field
-from typing import List, Union
+from typing import List, Union, Dict
 import os
 import json
 from dotenv import load_dotenv
@@ -9,6 +9,7 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 category_gen_instruction_file_path="instructions/category_generation_instructions.txt"
+trend_summary_instruction_file_path="instructions/trend_summary_instructions.txt"
 client= OpenAI(api_key=OPENAI_API_KEY)
 
 class FashionClassificationCategories(BaseModel):
@@ -29,7 +30,24 @@ class FashionClassificationCategories(BaseModel):
     accessories: Union[List[str], None] = Field(
         ..., 
         description="A list of keywords describing accessories present in the image if any", 
-        examples=["handbag", "necklace", "earrings", "belt", "scarf", "sunglasses", "hat", "watch", "bracelet", "ring"]
+        examples=["silver necklace",
+    "leather belt",
+    "silk scarf",
+    "platinum watch",
+    "diamond ring",
+    "pearl earrings",
+    "suede gloves",
+    "chunky bracelet",
+    "cashmere shawl",
+    "tote bag",
+    "oversized sunglasses",
+    "wide-brim hat",
+    "vintage brooch",
+    "floral hair clip",
+    "leather wallet",
+    "beaded clutch",
+    "fur stole",
+    "canvas backpack",]
     )
     color_palette: List[str]= Field(
         ..., 
@@ -108,3 +126,24 @@ def generate_categories(image_url:str):
 # image_url="https://i.pinimg.com/236x/91/cd/df/91cddf7888d9151ddcbc0435da0de97e.jpg"
 # categories= generate_categories(image_url)
 # print(categories)
+
+def get_trend_summary(dataset: List[Dict]):
+    system_instruction = load_txt_instuctions(trend_summary_instruction_file_path)
+    input=[
+        {
+            "role":"developer", 
+            "content": system_instruction
+        }, 
+        {
+  "role": "user",
+  "content": f"Here is the dataset. Each entry represents an image scraped from Pinterest, labeled by a zero-shot classifier and visual language model. Please summarize the emerging fashion trends across the full dataset.{json.dumps(dataset, indent=2)}"
+}
+
+    ]
+    response=client.responses.create(
+        model="gpt-4o", 
+        input=input,
+      
+    )
+    return response.output_text
+
