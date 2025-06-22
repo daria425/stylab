@@ -1,7 +1,6 @@
 from app.services.fashion_classifier import FashionClassifier
-from app.services.llm_service import get_trend_summary
+from app.services.fashion_analyzer import get_trend_summary
 from app.utils.logger import logger
-import time
 from typing import List, Dict
 import json
 scraped_data_file_path="output_data/pinterest_street+style+trends+2025.json"

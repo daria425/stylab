@@ -3,7 +3,6 @@ from google.genai import types
 from pydantic import BaseModel, Field
 from typing import List, Union, Dict
 from app.utils.file_utils import load_txt_instuctions
-import requests
 import json
 category_gen_instruction_file_path = "instructions/category_generation_instructions.txt"
 trend_summary_instruction_file_path = "instructions/trend_summary_instructions.txt"
@@ -72,3 +71,28 @@ def generate_categories(image_bytes:bytes):
     categories_dict = json.loads(categories)
     return categories_dict
     
+def generate_summary(trend_dataset: List[Dict[str, Union[str, Dict]]]):
+    system_instruction = load_txt_instuctions(trend_summary_instruction_file_path)
+    contents = [
+    {
+        "role": "user",
+        "parts": [
+            {
+                "text": "Here is the dataset. Each entry represents an image scraped from Pinterest, labeled by a zero-shot classifier and visual language model. Please summarize the emerging fashion trends across the full dataset."
+            },
+            {
+                "text": json.dumps(trend_dataset, indent=2)
+            }
+        ]
+    }
+    ]
+    response = client.models.generate_content(
+        model="gemini-2.0-flash-001",
+        contents=contents,
+        config=types.GenerateContentConfig(
+            system_instruction=system_instruction,
+        ),
+    )
+    summary = response.text
+    return summary
+
