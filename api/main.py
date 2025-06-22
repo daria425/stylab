@@ -22,7 +22,7 @@ def main(scraped_data:List[Dict[str, str]]):
           "img": d["img"],
           "classification": result
       })
-      time.sleep(1)  # Sleep to avoid rate limiting or overloading the API
+      # time.sleep(1)  # Sleep to avoid rate limiting or overloading the API
     summary= get_trend_summary(results)
     logger.info("Trend summary generated successfully.")
     print(summary)
