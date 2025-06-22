@@ -2,12 +2,11 @@ from apify_client import ApifyClientAsync
 from dotenv import load_dotenv
 import os
 from typing import List
-import asyncio
 import json
 load_dotenv()
 APIFY_TOKEN = os.getenv("APIFY_TOKEN")
 
-async def main(hashtags: List[str]):
+async def get_hashtag_views(hashtags: List[str]):
     client = ApifyClientAsync(token=APIFY_TOKEN)
     run_input = {
         "hashtags": hashtags,
@@ -55,7 +54,3 @@ async def main(hashtags: List[str]):
     except Exception as e:
         print(f"Error during scraping: {e}")
         return {}
-
-if __name__ == "__main__":
-    result = asyncio.run(main(hashtags=["layered", "fashion"]))
-    print(f"Final result: {result}")

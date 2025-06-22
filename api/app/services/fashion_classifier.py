@@ -1,7 +1,7 @@
 
 from transformers import CLIPProcessor, CLIPModel
 import torch
-from app.services.llm_service import generate_categories
+from app.services.fashion_analyzer import generate_categories
 from app.utils.file_utils import fetch_image
 from app.utils.logger import logger
 sample_data={
@@ -35,9 +35,9 @@ class FashionClassifier:
     
     def process_label_classification(self, image_url):
         results = {}
-        label_dictionary = generate_categories(image_url)
+        image, image_bytes= fetch_image(image_url, convert_rgb=True)
+        label_dictionary = generate_categories(image_bytes)
         logger.info(f"Generated categories: {label_dictionary}")
-        image= fetch_image(image_url, convert_rgb=True)
         for category, labels in label_dictionary.items():
             if not labels:
                 results[category] = {

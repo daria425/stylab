@@ -2,12 +2,14 @@ from PIL import Image
 import requests
 from pathlib import Path
 from io import BytesIO
-def fetch_image(url: str, convert_rgb:bool=False) -> Image.Image:
+
+def fetch_image(url: str, convert_rgb:bool=False) -> tuple[Image.Image, bytes]:
     response = requests.get(url)
-    img = Image.open(BytesIO(response.content))
+    image_bytes = response.content
+    img = Image.open(BytesIO(image_bytes))
     if convert_rgb:
         img = img.convert("RGB")
-    return img
+    return img, image_bytes
 
 def load_txt_instuctions(file_path: str) -> str:
     """
