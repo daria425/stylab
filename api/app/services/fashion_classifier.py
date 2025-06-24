@@ -54,9 +54,4 @@ class FashionClassifier:
             }
         return results
     
-# Example usage:
-# classifier = FashionClassifier()
-# image_url = sample_data["img"]
-# results = classifier.process_label_classification(image_url)
-# print("Classification Results:")
-# print(results)
+

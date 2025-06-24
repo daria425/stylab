@@ -6,7 +6,7 @@ from app.utils.file_utils import load_txt_instuctions
 import json
 category_gen_instruction_file_path = "instructions/category_generation_instructions.txt"
 trend_summary_instruction_file_path = "instructions/trend_summary_instructions.txt"
-
+image_prompt_gen_file_path = "instructions/image_prompt_gen_instructions.txt"
 client = genai.Client(
     vertexai=True, project="social-style-scan", location="us-central1"
 )
@@ -43,6 +43,12 @@ class FashionClassificationCategories(BaseModel):
     styling_details: Union[List[str], None] = Field(
         ..., 
         description="A list of styling details present in the image for fashion classification."
+    )
+
+class FashionImagePrompt(BaseModel):
+    prompts: List[str] = Field(
+        ..., 
+        description="Text prompt to guide the fashion classification model."
     )
 
 def generate_categories(image_bytes:bytes):
@@ -96,3 +102,30 @@ def generate_summary(trend_dataset: List[Dict[str, Union[str, Dict]]]):
     summary = response.text
     return summary
 
+def generate_image_prompt(trend_summary: str):
+    system_instruction = load_txt_instuctions(image_prompt_gen_file_path)
+    contents = [
+        {
+            "role": "user",
+            "parts": [
+                {
+                    "text": "Generate a list of text prompts for generating images of garments that represent the fashion trends summarized below. The prompts should be detailed and suitable for use with an image generation model."
+                },
+                {
+                    "text": trend_summary
+                }
+            ]
+        }
+    ]
+    response = client.models.generate_content(
+        model="gemini-2.0-flash-001",
+        contents=contents,
+        config=types.GenerateContentConfig(
+            system_instruction=system_instruction,
+            response_schema=FashionImagePrompt.model_json_schema(),
+            response_mime_type="application/json",
+        ),
+    )
+    image_prompts = response.text
+    image_prompts_dict = json.loads(image_prompts)
+    return image_prompts_dict
