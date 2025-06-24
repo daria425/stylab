@@ -1,5 +1,6 @@
 from app.services.fashion_classifier import FashionClassifier
 from app.services.fashion_analyzer import generate_summary, generate_image_prompt
+from app.services.fashion_image_gen import create_garment_image
 from app.utils.logger import logger
 from typing import List, Dict
 import json
@@ -31,9 +32,12 @@ def main(scraped_data:List[Dict[str, str]], use_cached_data:bool=False):
     summary= generate_summary(results)
     logger.info("Trend summary generated successfully.")
     print(summary)
-    prompts=generate_image_prompt(summary)
-    print(prompts)
-    logger.info("Fashion classification and trend summary process completed.")
+    prompts_dict=generate_image_prompt(summary)
+    prompts= prompts_dict["prompts"]
+    for i, prompt in enumerate(prompts):
+       create_garment_image(prompt, i+1)
+    logger.info("Garment images generated successfully.")
+    
 
 if __name__ == "__main__":
     main(scraped_data, use_cached_data=True)

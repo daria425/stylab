@@ -4,3 +4,4 @@ __pycache__
 *.pyc
 output_data
 **/output_data/
+generated_images/
