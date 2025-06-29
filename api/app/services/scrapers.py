@@ -2,7 +2,7 @@ import asyncio
 from playwright.async_api import async_playwright
 import json
 from urllib.parse import quote_plus
-from datetime import datetime
+from app.utils.file_utils import save_to_json
 from app.utils.logger import logger
 from abc import ABC, abstractmethod
 
@@ -102,9 +102,7 @@ class PinterestScraper(BaseScraper):
         logger.info(f"Starting Pinterest scrape for query: {self.query}")
         scraped_data = await self.scrape_pins(self.query, self.num_scrols)
         if save_results:
-            with open(f"pinterest_{self.query}.json", "w") as f:
-                json.dump(scraped_data, f, indent=2)
-            logger.info(f"Results saved to pinterest_{self.query}.json")
+            save_to_json(scraped_data, "pinterest_scraped_data.json", output_dir="output_data")
         else:
             logger.info("Results not saved, only scraped data returned.")
         logger.info(f"Scraped {len(scraped_data)} pins for query: {self.query}")
