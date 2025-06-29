@@ -10,7 +10,7 @@ import asyncio
 from datetime import datetime
 cached_fashion_classification_file_path="output_data/fashion_classification_results.json"
 
-async def main(use_cached_data:bool=False):
+async def main(use_cached_data:bool=False, save_data:bool=False):
     current_year= datetime.now().year
     query=f"street style trends {current_year}"
     logger.info("Fashion classification and trend summary process started.")
@@ -34,15 +34,27 @@ async def main(use_cached_data:bool=False):
                 "classification": result
             })
             time.sleep(1)
-    save_to_json(results, "fashion_classification_results.json", output_dir="output_data") # return in API call 
+    data={
+        "trend_analysis": results,
+        "images":[]
+
+    }
+    if save_data:
+        save_to_json(results, "fashion_classification_results.json", output_dir="output_data")
     summary= generate_summary(results)
+    data["trend_summary"]=summary
     logger.info("Trend summary generated successfully.")
     prompts_dict=generate_image_prompt(summary)
     prompts= prompts_dict["prompts"]
     for i, prompt in enumerate(prompts):
-       file_path=create_garment_image(prompt, i+1)
+       image_data_url=create_garment_image(prompt=prompt, image_num=i+1, save_image=True)
+       data["images"].append({
+              "prompt": prompt,
+              "image_data_url": image_data_url
+       })
     #    create_3d_render(file_path, i+1)
     logger.info("Garment images generated successfully.Pipeline completed.")
+    return data
     
 if __name__ == "__main__":
     asyncio.run(main(use_cached_data=False))
