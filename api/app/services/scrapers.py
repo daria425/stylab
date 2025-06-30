@@ -108,6 +108,15 @@ class PinterestScraper(BaseScraper):
         logger.info(f"Scraped {len(scraped_data)} pins for query: {self.query}")
         return scraped_data
 
+def get_default_pinterest_scraper(query: str, num_scrols: int = 3) -> PinterestScraper:
+    """
+    Factory function to create a default PinterestScraper instance.
+    
+    :param query: Search query for Pinterest.
+    :param num_scrols: Number of scrolls to perform on the search results page.
+    :return: An instance of PinterestScraper.
+    """
+    return PinterestScraper(query=query, num_scrols=num_scrols)
 # Example usage:
 # current_year=datetime.now().year
 # query=f"street style trends {current_year}"
