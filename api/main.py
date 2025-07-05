@@ -7,7 +7,7 @@ from app.services.scrapers import get_default_pinterest_scraper
 from app.models.trend_analysis import TrendAnalysisResponse
 from datetime import datetime
 
-origins=["http://localhost:3001", "https://social-style-scan.vercel.app"]
+origins=["http://localhost:3000", "http://localhost:3001", "https://social-style-scan.vercel.app"]
 
 
 app = FastAPI()

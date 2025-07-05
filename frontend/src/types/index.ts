@@ -1,3 +1,6 @@
-import type { TrendAnalysisResponse } from "./trend-analysis";
+import type {
+  TrendAnalysisResponse,
+  TrendAnalysisItem,
+} from "./trend-analysis";
 
-export { TrendAnalysisResponse };
+export { TrendAnalysisResponse, TrendAnalysisItem };
