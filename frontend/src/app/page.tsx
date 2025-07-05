@@ -1,15 +1,13 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import api from "@/lib/apiConfig";
-
-const getTrendAnalysis = async () => {
-  const response = await api.get("/api/trend-analysis");
-  return response.data;
-};
+import trendAnalysisService from "@/services/trendAnalysisService";
 export default function Home() {
   const { data, error, isLoading } = useQuery({
     queryKey: ["trendAnalysis"],
-    queryFn: getTrendAnalysis,
+    queryFn: async () => {
+      const response = await trendAnalysisService.getTrendAnalysis();
+      return response;
+    },
   });
   console.log(data, error, isLoading);
   return <div>Hello</div>;

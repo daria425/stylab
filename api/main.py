@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse
 from app.services.trend_analysis import TrendAnalysisService
 from app.services.fashion_classifier import FashionClassifier
 from app.services.scrapers import get_default_pinterest_scraper
-
+from app.models.trend_analysis import TrendAnalysisResponse
 from datetime import datetime
 
 origins=["http://localhost:3001", "https://social-style-scan.vercel.app"]
@@ -28,7 +28,7 @@ def health_check():
     Health check endpoint to verify the API is running.
     """
     return {"status": "ok", "message": "API is running"}
-@app.get("/api/trend-analysis")
+@app.get("/api/trend-analysis", response_model=TrendAnalysisResponse)
 async def get_trend_analysis(trend_analysis_service: TrendAnalysisService = Depends(TrendAnalysisService), fashion_classifier: FashionClassifier = Depends(FashionClassifier)):
     """
     Endpoint to trigger the trend analysis service.
