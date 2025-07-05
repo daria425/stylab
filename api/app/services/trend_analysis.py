@@ -6,7 +6,6 @@ from app.utils.logger import logger
 from app.utils.file_utils import save_to_json
 import json
 import time
-from datetime import datetime
 cached_fashion_classification_file_path="output_data/fashion_classification_results.json"
 
 
@@ -17,8 +16,6 @@ class TrendAnalysisService:
         self.save_data = save_data
 
     async def run(self, pinterest_scraper: PinterestScraper, fashion_classifier: FashionClassifier):
-        current_year= datetime.now().year
-        query=f"street style trends {current_year}"
         logger.info("Fashion classification and trend summary process started.")
         if self.use_cached_data: 
             with open(cached_fashion_classification_file_path, "r") as file:
