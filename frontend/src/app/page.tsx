@@ -2,17 +2,10 @@
 import { useQuery } from "@tanstack/react-query";
 import trendAnalysisService from "@/services/trendAnalysisService";
 import { formatCategoryName } from "@/lib/utils";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import Image from "next/image";
-import type { TrendAnalysisItem, TrendAnalysisResponse } from "@/types";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { TrendAnalysisItem } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles } from "lucide-react";
 
 function TrendAnalysisClassificationCard({
   trendAnalysisItem,
@@ -29,31 +22,43 @@ function TrendAnalysisClassificationCard({
   }));
   return (
     <Card>
-      <CardTitle>{trendAnalysisItem.title}</CardTitle>
-      <div className="relative h-48 w-full bg-gray-100 flex">
-        {images.map((imageUrl, index) => (
-          <Image
-            key={index}
-            src={imageUrl}
-            alt={trendAnalysisItem.title}
-            className="object-cover w-1/3 h-full"
-          />
-        ))}
-      </div>
-      <ul>
-        {categoryData.map((category, index) => (
-          <li key={index}>
-            {category.topLabel && (
-              <div>
-                <h6 className="text-lg font-semibold">
-                  {formatCategoryName(category.category)}
-                </h6>
-                <p>{category.topLabel}</p>
+      <CardHeader>
+        <CardTitle>{trendAnalysisItem.title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="h-48 overflow-x-auto overflow-y-hidden">
+          <div className="flex h-full gap-2 min-w-max">
+            {images?.map((imageUrl, index) => (
+              <div key={index} className="relative h-full w-32 flex-shrink-0">
+                <img
+                  src={imageUrl}
+                  alt={`${trendAnalysisItem.title} - image ${index + 1}`}
+                  className="w-full h-full object-cover rounded"
+                  loading="lazy"
+                />
               </div>
-            )}
-          </li>
-        ))}
-      </ul>
+            ))}
+          </div>
+        </div>
+
+        <ul>
+          {categoryData.map((category, index) => (
+            <li key={index}>
+              {category.topLabel && (
+                <div className="flex items-center mt-2 justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-3 w-3" />
+                    <p className="text-sm font-semibold">
+                      {formatCategoryName(category.category)}
+                    </p>
+                  </div>
+                  <Badge variant="outline">{category.topLabel}</Badge>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </CardContent>
     </Card>
   );
 }
@@ -73,10 +78,14 @@ export default function Home() {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Trend Analysis</h2>
-      <p>{trend_summary}</p>
-      {trend_analysis.map((item, index) => (
-        <TrendAnalysisClassificationCard trendAnalysisItem={item} key={index} />
-      ))}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {trend_analysis.map((item, index) => (
+          <TrendAnalysisClassificationCard
+            trendAnalysisItem={item}
+            key={index}
+          />
+        ))}
+      </div>
     </div>
   );
 }

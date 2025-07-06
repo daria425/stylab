@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Providers from "@/lib/providers";
 import "./globals.css";
-
+import Header from "@/components/layouts/header";
 export const metadata: Metadata = {
   title: "Social Style Scan",
   description:
@@ -16,7 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );

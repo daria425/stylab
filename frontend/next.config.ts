@@ -5,13 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "i.pinimg.com",
-        pathname: "/**",
+        hostname: "*",
       },
       {
-        protocol: "https",
-        hostname: "*.pinimg.com", // Covers subdomains
-        pathname: "/**",
+        protocol: "http",
+        hostname: "*", // Allow all hostnames (if needed)
       },
     ],
   },
