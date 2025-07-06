@@ -15,10 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="h-screen grid grid-rows-[auto_minmax(0,1fr)]">
         <Providers>
           <Header />
-          {children}
+          <main className="container mx-auto px-4 py-6 max-h-full overflow-auto text-sm">
+            {children}
+          </main>
         </Providers>
       </body>
     </html>

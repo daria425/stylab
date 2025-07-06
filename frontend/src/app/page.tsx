@@ -5,6 +5,7 @@ import { formatCategoryName, capitalize } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { TrendAnalysisItem } from "@/types";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselNext,
@@ -21,6 +22,7 @@ import {
   Palette,
   ZoomIn,
   SwatchBook,
+  Box,
 } from "lucide-react";
 
 function getIconForCategory(category: string, height: string, width: string) {
@@ -84,13 +86,13 @@ function TrendAnalysisClassificationCard({
             <li key={index}>
               {category.topLabel && (
                 <div className="flex items-center mt-2 justify-between">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-xs ">
                     {getIconForCategory(category.category, "1em", "1em")}
-                    <p className="text-sm font-semibold">
+                    <p className="font-semibold">
                       {formatCategoryName(category.category)}
                     </p>
                   </div>
-                  <Badge variant="outline">
+                  <Badge variant="outline" className="!text-xs font-normal">
                     {capitalize(category.topLabel)}
                   </Badge>
                 </div>
@@ -116,10 +118,10 @@ export default function Home() {
   const { generated_images, trend_analysis, trend_summary } = data;
 
   return (
-    <main className="grid grid-cols-1 sm:grid-cols-2">
-      <section>
-        <h2 className="text-2xl font-bold mb-4">Trend Analysis</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <section className="grid grid-cols-1 lg:grid-cols-2 max-h-full items-start lg:grid-rows-[100%] gap-2">
+      <div className="max-h-full overflow-y-auto">
+        <h2 className="text-2xl font-bold mb-4">Latest Trends</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {trend_analysis.map((item, index) => (
             <TrendAnalysisClassificationCard
               trendAnalysisItem={item}
@@ -127,8 +129,8 @@ export default function Home() {
             />
           ))}
         </div>
-      </section>
-      <section>
+      </div>
+      <div className="flex flex-col items-center w-full">
         <h2 className="text-2xl font-bold mb-4">Concept Visuals</h2>
         <div className="relative px-16">
           <Carousel className="max-w-[300px] sm:max-w-sm mx-auto">
@@ -136,15 +138,21 @@ export default function Home() {
               {generated_images.map((image, index) => (
                 <CarouselItem key={index}>
                   <div className="p-1">
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6">
-                        <img
-                          src={image.image_data_url}
-                          alt={`Generated image ${index + 1}: ${image.prompt}`}
-                          className="w-full h-full object-contain rounded"
-                        />
-                      </CardContent>
-                    </Card>
+                    <div className="flex aspect-square items-center justify-center mb-1 relative">
+                      <img
+                        src={image.image_data_url}
+                        alt={`Generated image ${index + 1}: ${image.prompt}`}
+                        className="w-full h-full object-contain rounded"
+                      />
+                      <Button
+                        variant={"default"}
+                        className="absolute top-2 right-2"
+                      >
+                        <Box />
+                        View in Studio
+                      </Button>
+                    </div>
+                    <p className="text-sm">{image.prompt}</p>
                   </div>
                 </CarouselItem>
               ))}
@@ -153,7 +161,7 @@ export default function Home() {
             <CarouselNext />
           </Carousel>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 }
