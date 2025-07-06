@@ -9,17 +9,17 @@ type Classification = { [key: string]: ClassificationCategory }; // Dynamic cate
 export type TrendAnalysisItem = {
   title: string;
   url: string;
-  img: string;
+  images: Array<string>;
   classification: Classification;
 };
 
-type TrendImages = {
+type GeneratedImages = {
   prompt: string;
   image_data_url: string;
 };
 
 export type TrendAnalysisResponse = {
   trend_summary: string;
-  images: TrendImages[];
+  generated_images: GeneratedImages[];
   trend_analysis: TrendAnalysisItem[];
 };

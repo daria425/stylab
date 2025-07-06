@@ -117,6 +117,8 @@ def get_default_pinterest_scraper(query: str, num_scrols: int = 3) -> PinterestS
     :return: An instance of PinterestScraper.
     """
     return PinterestScraper(query=query, num_scrols=num_scrols)
+
+
 # Example usage:
 # current_year=datetime.now().year
 # query=f"street style trends {current_year}"

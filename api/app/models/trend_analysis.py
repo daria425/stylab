@@ -9,7 +9,7 @@ class ClassificationCategory(BaseModel):
 class TrendAnalysisItem(BaseModel):
     title: str = Field(..., description="Title/description of the fashion item")
     url: str = Field(..., description="URL/path to the original image")
-    img: str = Field(..., description="Image URL")
+    images: List[str] = Field(default_factory=list, description="List of image URLs related to the trend")
     classification: Dict[str, ClassificationCategory] = Field(..., description="Fashion classification results")
 
 class TrendImage(BaseModel):
@@ -18,6 +18,6 @@ class TrendImage(BaseModel):
 
 class TrendAnalysisResponse(BaseModel):
     trend_summary: str = Field(..., description="AI-generated summary of fashion trends")
-    images: List[TrendImage] = Field(default_factory=list, description="Generated fashion images")
+    generated_images: List[TrendImage] = Field(default_factory=list, description="Generated fashion images")
     trend_analysis: List[TrendAnalysisItem] = Field(default_factory=list, description="Analyzed fashion items from Pinterest")
 

@@ -5,6 +5,7 @@ from app.services.trend_analysis import TrendAnalysisService, get_trend_analysis
 from app.services.fashion_classifier import FashionClassifier
 from app.services.scrapers import get_default_pinterest_scraper
 from app.models.trend_analysis import TrendAnalysisResponse
+from app.services.image_search import ImageSearchService
 from datetime import datetime
 
 origins=["http://localhost:3000", "http://localhost:3001", "https://social-style-scan.vercel.app"]
@@ -29,12 +30,12 @@ def health_check():
     """
     return {"status": "ok", "message": "API is running"}
 @app.get("/api/trend-analysis", response_model=TrendAnalysisResponse)
-async def get_trend_analysis(trend_analysis_service: TrendAnalysisService = Depends(get_trend_analysis_service_with_saving), fashion_classifier: FashionClassifier = Depends(FashionClassifier)):
+async def get_trend_analysis(trend_analysis_service: TrendAnalysisService = Depends(get_trend_analysis_service_with_saving), fashion_classifier: FashionClassifier = Depends(FashionClassifier), image_search_service: ImageSearchService = Depends(ImageSearchService)):
     """
     Endpoint to trigger the trend analysis service.
     """
     current_year= datetime.now().year
     query=f"street style trends {current_year}"
     pinterest_scraper = get_default_pinterest_scraper(query=query, num_scrols=3)
-    result = await trend_analysis_service.run(pinterest_scraper=pinterest_scraper, fashion_classifier=fashion_classifier)
+    result = await trend_analysis_service.run(pinterest_scraper=pinterest_scraper, fashion_classifier=fashion_classifier, image_search_service=image_search_service)
     return result

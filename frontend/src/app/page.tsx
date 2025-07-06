@@ -19,7 +19,7 @@ function TrendAnalysisClassificationCard({
 }: {
   trendAnalysisItem: TrendAnalysisItem;
 }) {
-  const { classification, img } = trendAnalysisItem;
+  const { classification, images } = trendAnalysisItem;
   const categories = Object.entries(classification);
   const categoryData = categories.map(([categoryName, categoryInfo]) => ({
     category: categoryName,
@@ -30,14 +30,15 @@ function TrendAnalysisClassificationCard({
   return (
     <Card>
       <CardTitle>{trendAnalysisItem.title}</CardTitle>
-      <div className="relative h-48 w-full bg-gray-100 flex items-center justify-center">
-        <Image
-          src={trendAnalysisItem.img}
-          alt={trendAnalysisItem.title}
-          fill
-          className="object-contain"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+      <div className="relative h-48 w-full bg-gray-100 flex">
+        {images.map((imageUrl, index) => (
+          <Image
+            key={index}
+            src={imageUrl}
+            alt={trendAnalysisItem.title}
+            className="object-cover w-1/3 h-full"
+          />
+        ))}
       </div>
       <ul>
         {categoryData.map((category, index) => (
@@ -67,7 +68,7 @@ export default function Home() {
 
   if (isLoading || !data) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  const { images, trend_analysis, trend_summary } = data;
+  const { generated_images, trend_analysis, trend_summary } = data;
 
   return (
     <div>
