@@ -24,7 +24,7 @@ def create_garment_image(
         str: The file path of the generated image.
     """
     logger.info(f"Generating image {image_num} with prompt: {prompt}")
-    prompt = f"{prompt}. White background, high resolution, photography, soft lighting, studio"
+    prompt = f"{prompt}. editorial, high resolution, photography, soft lighting, vogue, snapshot, modern, street style, soft-focus background"
     response = requests.post(
         f"https://api.stability.ai/v2beta/stable-image/generate/ultra",
         headers={"authorization": f"Bearer {STABILITY_API_KEY}", "accept": "image/*"},
@@ -41,10 +41,8 @@ def create_garment_image(
             file_path = f"{output_dir}/image_{image_num}.jpg"
             with open(file_path, "wb") as file:
                 file.write(response.content)
-            return file_path
-        else:
-            b64_image = base64.b64encode(response.content).decode("utf-8")
-            return f"data:image/jpeg;base64,{b64_image}"
+        b64_image = base64.b64encode(response.content).decode("utf-8")
+        return f"data:image/jpeg;base64,{b64_image}"
 
     else:
         raise Exception(str(response.json()))

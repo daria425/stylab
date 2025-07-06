@@ -1,12 +1,50 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import trendAnalysisService from "@/services/trendAnalysisService";
-import { formatCategoryName } from "@/lib/utils";
+import { formatCategoryName, capitalize } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { TrendAnalysisItem } from "@/types";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles } from "lucide-react";
+import {
+  Carousel,
+  CarouselNext,
+  CarouselPrevious,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import {
+  Sparkles,
+  Shirt,
+  Columns3,
+  Briefcase,
+  Cone,
+  Palette,
+  ZoomIn,
+  SwatchBook,
+} from "lucide-react";
 
+function getIconForCategory(category: string, height: string, width: string) {
+  switch (category) {
+    case "garments":
+      return <Shirt height={height} width={width} />;
+    case "print_or_pattern":
+      return <Columns3 height={height} width={width} />;
+    case "accessories":
+      return <Briefcase height={height} width={width} />;
+    case "silhouette":
+      return <Cone height={height} width={width} />;
+    case "color_palette":
+      return <Palette height={height} width={width} />;
+    case "aesthetics":
+      return <Sparkles height={height} width={width} />;
+    case "styling_details":
+      return <ZoomIn height={height} width={width} />;
+    case "fabrics":
+      return <SwatchBook height={height} width={width} />;
+    default:
+      return <Sparkles height={height} width={width} />;
+  }
+}
 function TrendAnalysisClassificationCard({
   trendAnalysisItem,
 }: {
@@ -47,12 +85,14 @@ function TrendAnalysisClassificationCard({
               {category.topLabel && (
                 <div className="flex items-center mt-2 justify-between">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="h-3 w-3" />
+                    {getIconForCategory(category.category, "1em", "1em")}
                     <p className="text-sm font-semibold">
                       {formatCategoryName(category.category)}
                     </p>
                   </div>
-                  <Badge variant="outline">{category.topLabel}</Badge>
+                  <Badge variant="outline">
+                    {capitalize(category.topLabel)}
+                  </Badge>
                 </div>
               )}
             </li>
@@ -76,16 +116,44 @@ export default function Home() {
   const { generated_images, trend_analysis, trend_summary } = data;
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Trend Analysis</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {trend_analysis.map((item, index) => (
-          <TrendAnalysisClassificationCard
-            trendAnalysisItem={item}
-            key={index}
-          />
-        ))}
-      </div>
-    </div>
+    <main className="grid grid-cols-1 sm:grid-cols-2">
+      <section>
+        <h2 className="text-2xl font-bold mb-4">Trend Analysis</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {trend_analysis.map((item, index) => (
+            <TrendAnalysisClassificationCard
+              trendAnalysisItem={item}
+              key={index}
+            />
+          ))}
+        </div>
+      </section>
+      <section>
+        <h2 className="text-2xl font-bold mb-4">Concept Visuals</h2>
+        <div className="relative px-16">
+          <Carousel className="max-w-[300px] sm:max-w-sm mx-auto">
+            <CarouselContent>
+              {generated_images.map((image, index) => (
+                <CarouselItem key={index}>
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="flex aspect-square items-center justify-center p-6">
+                        <img
+                          src={image.image_data_url}
+                          alt={`Generated image ${index + 1}: ${image.prompt}`}
+                          className="w-full h-full object-contain rounded"
+                        />
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        </div>
+      </section>
+    </main>
   );
 }

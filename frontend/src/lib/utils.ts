@@ -7,6 +7,9 @@ export function formatCategoryName(categoryName: string): string {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+export function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
