@@ -33,9 +33,8 @@ class FashionClassifier:
         print(f"Top match: {top_label} ({confidence:.2%} confidence)")
         return top_label, confidence, label_results
     
-    def process_label_classification(self, image_url):
+    def process_label_classification(self, image, image_bytes):
         results = {}
-        image, image_bytes= fetch_image(image_url, convert_rgb=True)
         label_dictionary = generate_categories(image_bytes)
         logger.info(f"Generated categories: {label_dictionary}")
         for category, labels in label_dictionary.items():

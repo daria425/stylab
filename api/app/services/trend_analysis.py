@@ -1,9 +1,9 @@
 from app.services.fashion_classifier import FashionClassifier
-from app.services.fashion_analyzer import generate_summary, generate_image_prompt
+from app.services.fashion_analyzer import generate_summary, generate_image_prompt, get_trend_name
 from app.services.scrapers import PinterestScraper
 from app.services.fashion_image_gen import create_garment_image, create_3d_render
 from app.utils.logger import logger
-from app.utils.file_utils import save_to_json
+from app.utils.file_utils import save_to_json, fetch_image
 import json
 import time
 cached_fashion_classification_file_path="output_data/fashion_classification_results.json"
@@ -27,9 +27,11 @@ class TrendAnalysisService:
             for i, d in enumerate(scraped_data):
                 image_url = d["img"]
                 logger.info(f"Processing image {i+1}/{len(scraped_data)}: {d['title']}")
-                result = fashion_classifier.process_label_classification(image_url)
+                image, image_bytes = fetch_image(image_url, convert_rgb=True)
+                result = fashion_classifier.process_label_classification(image, image_bytes)
+                trend_name=get_trend_name(classification_dataset=result, image_bytes=image_bytes)
                 results.append({
-                    "title": d["title"],
+                    "title": trend_name, 
                     "url": d["url"],
                     "img": d["img"],
                     "classification": result
@@ -55,4 +57,16 @@ class TrendAnalysisService:
             })
         #    create_3d_render(file_path, i+1)
         logger.info("Garment images generated successfully.Pipeline completed.")
+        if self.save_data:
+            save_to_json(data, "trend_analysis_results.json", output_dir="output_data")
+        else:
+            logger.info("Results not saved, only returned.")
         return data
+
+def get_trend_analysis_service_with_saving():
+    """
+    Factory function to create a TrendAnalysisService instance with saving enabled.
+    
+    :return: An instance of TrendAnalysisService with saving enabled.
+    """
+    return TrendAnalysisService(use_cached_data=False, save_data=True)

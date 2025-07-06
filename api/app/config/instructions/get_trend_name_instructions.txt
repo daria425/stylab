@@ -1,0 +1,93 @@
+The following dataset contains classification results for an image. 
+Each entry is an object containing category-level labels predicted by an AI system using computer vision (CLIP) and GPT for structured fashion tagging (e.g. garment type, fabric, aesthetic, etc.).
+Your task is to analyze the image alongside the classification dataset and generate a conscise trend name. 
+Example:
+{
+            "classification": {
+            "silhouette": {
+                "top_label": "loose fit",
+                "confidence": 0.813309907913208,
+                "label_results": {
+                    "oversized": 0.1866900473833084,
+                    "loose fit": 0.813309907913208
+                }
+            },
+            "garments": {
+                "top_label": "sweatpants",
+                "confidence": 0.9981879591941833,
+                "label_results": {
+                    "sweatshirt": 0.0018049156060442328,
+                    "sweatpants": 0.9981879591941833,
+                    "boots": 6.11204131928389e-06,
+                    "baseball cap": 1.10087944449333e-06
+                }
+            },
+            "fabrics": {
+                "top_label": "cotton",
+                "confidence": 1.0,
+                "label_results": {
+                    "cotton": 1.0
+                }
+            },
+            "aesthetics": {
+                "top_label": "streetwear",
+                "confidence": 0.999233603477478,
+                "label_results": {
+                    "streetwear": 0.999233603477478,
+                    "casual": 0.0007664447766728699
+                }
+            },
+            "accessories": {
+                "top_label": "keychain",
+                "confidence": 0.7773972749710083,
+                "label_results": {
+                    "gold necklace": 0.0496971569955349,
+                    "handbag": 0.07656612992286682,
+                    "keychain": 0.7773972749710083,
+                    "gold earrings": 0.09633944183588028
+                }
+            },
+            "color_palette": {
+                "top_label": "grey",
+                "confidence": 0.40056729316711426,
+                "label_results": {
+                    "neutral": 0.030371006578207016,
+                    "grey": 0.40056729316711426,
+                    "olive green": 0.31008514761924744,
+                    "beige": 0.04481648653745651,
+                    "yellow": 0.21416014432907104
+                }
+            },
+            "print_or_pattern": {
+                "top_label": "camouflage",
+                "confidence": 1.0,
+                "label_results": {
+                    "camouflage": 1.0
+                }
+            },
+            "styling_details": {
+                "top_label": "low-rise pants",
+                "confidence": 0.646058201789856,
+                "label_results": {
+                    "cropped top": 0.34098097681999207,
+                    "layered necklaces": 0.012960822321474552,
+                    "low-rise pants": 0.646058201789856
+                }
+            }
+        }
+}
+The keys of this dict represent classification categories. 
+Label results are in the format of a dict with label names as keys and confidence scores (0.0 to 1.0) as values.
+
+Based on the classification data above, generate a concise, catchy trend name that captures the essence of the style. Consider:
+- The highest confidence labels across categories
+- The overall aesthetic and vibe
+- Current fashion terminology
+- 2-4 words maximum
+
+Example trend names for the above data:
+- "Camo Streetwear Comfort"
+- "Utility Athleisure"
+- "Urban Camouflage Style"
+
+Your response should be just the trend name, nothing else.

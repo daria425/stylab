@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
-from app.services.trend_analysis import TrendAnalysisService
+from app.services.trend_analysis import TrendAnalysisService, get_trend_analysis_service_with_saving
 from app.services.fashion_classifier import FashionClassifier
 from app.services.scrapers import get_default_pinterest_scraper
 from app.models.trend_analysis import TrendAnalysisResponse
@@ -29,7 +29,7 @@ def health_check():
     """
     return {"status": "ok", "message": "API is running"}
 @app.get("/api/trend-analysis", response_model=TrendAnalysisResponse)
-async def get_trend_analysis(trend_analysis_service: TrendAnalysisService = Depends(TrendAnalysisService), fashion_classifier: FashionClassifier = Depends(FashionClassifier)):
+async def get_trend_analysis(trend_analysis_service: TrendAnalysisService = Depends(get_trend_analysis_service_with_saving), fashion_classifier: FashionClassifier = Depends(FashionClassifier)):
     """
     Endpoint to trigger the trend analysis service.
     """

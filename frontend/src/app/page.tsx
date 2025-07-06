@@ -19,16 +19,40 @@ function TrendAnalysisClassificationCard({
 }) {
   const { classification } = trendAnalysisItem;
   const categories = Object.entries(classification);
-
-  // Map to get just the data you need
   const categoryData = categories.map(([categoryName, categoryInfo]) => ({
-    name: categoryName,
+    category: categoryName,
     topLabel: categoryInfo.top_label,
     confidence: categoryInfo.confidence,
     allResults: categoryInfo.label_results,
   }));
-  console.log("Category data to render:", categoryData);
-  return null;
+  return (
+    <Card>
+      <CardTitle>Classification</CardTitle>
+      <div>
+        {categoryData.map((category, index) => (
+          <div key={index}>
+            <h3 className="text-lg font-semibold">{category.category}</h3>
+            <p>Top Label: {category.topLabel || "N/A"}</p>
+            <p>
+              Confidence:{" "}
+              {category.confidence !== null
+                ? `${(category.confidence * 100).toFixed(2)}%`
+                : "N/A"}
+            </p>
+            {/* <ul>
+              {
+                Object.entries(category.allResults).map(([label, score]) => (
+                  <li key={label}>
+                    {label}: {score}
+                  </li>
+                ))
+              }
+            </ul> */}
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
 }
 export default function Home() {
   const { data, error, isLoading } = useQuery({

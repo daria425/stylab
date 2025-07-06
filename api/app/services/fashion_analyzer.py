@@ -7,6 +7,7 @@ import json
 category_gen_instruction_file_path = "instructions/category_generation_instructions.txt"
 trend_summary_instruction_file_path = "instructions/trend_summary_instructions.txt"
 image_prompt_gen_file_path = "instructions/image_prompt_gen_instructions.txt"
+trend_name_instruction_file_path = "instructions/get_trend_name_instructions.txt"
 client = genai.Client(
     vertexai=True, project="social-style-scan", location="us-central1"
 )
@@ -51,6 +52,39 @@ class FashionImagePrompt(BaseModel):
         description="Text prompt to guide the fashion classification model."
     )
 
+def get_trend_name(classification_dataset:Dict[str, Union[str, Dict]], image_bytes:bytes) -> str:
+    """
+    Extracts the trend name from the classification dataset.
+    
+    :param classification_dataset: The dataset containing fashion classification results.
+    """
+    system_instructions=load_txt_instuctions(trend_name_instruction_file_path)
+    contents = [
+        {
+            "role": "user",
+            "parts": [
+                {
+                    "text": f"What would be a good trend name for the following image? According to an AI model, it has been classified as follows: {json.dumps(classification_dataset, indent=2)}"
+                },
+                {"inlineData": {"mimeType": "image/jpeg", "data": image_bytes}},
+            ],
+        }
+
+    ]
+    response=client.models.generate_content(
+                model="gemini-2.0-flash-001",
+        contents=contents,
+        config=types.GenerateContentConfig(
+            system_instruction=system_instructions,
+        )
+
+    )
+    trend_name = response.text.strip()
+    if not trend_name:
+        raise ValueError("Trend name generation failed. The response was empty.")
+    return trend_name
+
+    
 def generate_categories(image_bytes:bytes):
     system_instruction = load_txt_instuctions(category_gen_instruction_file_path)
     contents = [
