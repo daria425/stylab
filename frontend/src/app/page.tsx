@@ -1,6 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import trendAnalysisService from "@/services/trendAnalysisService";
+import { formatCategoryName } from "@/lib/utils";
 import {
   Card,
   CardAction,
@@ -10,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Image from "next/image";
 import type { TrendAnalysisItem, TrendAnalysisResponse } from "@/types";
 
 function TrendAnalysisClassificationCard({
@@ -17,7 +19,7 @@ function TrendAnalysisClassificationCard({
 }: {
   trendAnalysisItem: TrendAnalysisItem;
 }) {
-  const { classification } = trendAnalysisItem;
+  const { classification, img } = trendAnalysisItem;
   const categories = Object.entries(classification);
   const categoryData = categories.map(([categoryName, categoryInfo]) => ({
     category: categoryName,
@@ -27,30 +29,30 @@ function TrendAnalysisClassificationCard({
   }));
   return (
     <Card>
-      <CardTitle>Classification</CardTitle>
-      <div>
-        {categoryData.map((category, index) => (
-          <div key={index}>
-            <h3 className="text-lg font-semibold">{category.category}</h3>
-            <p>Top Label: {category.topLabel || "N/A"}</p>
-            <p>
-              Confidence:{" "}
-              {category.confidence !== null
-                ? `${(category.confidence * 100).toFixed(2)}%`
-                : "N/A"}
-            </p>
-            {/* <ul>
-              {
-                Object.entries(category.allResults).map(([label, score]) => (
-                  <li key={label}>
-                    {label}: {score}
-                  </li>
-                ))
-              }
-            </ul> */}
-          </div>
-        ))}
+      <CardTitle>{trendAnalysisItem.title}</CardTitle>
+      <div className="relative h-48 w-full bg-gray-100 flex items-center justify-center">
+        <Image
+          src={trendAnalysisItem.img}
+          alt={trendAnalysisItem.title}
+          fill
+          className="object-contain"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
       </div>
+      <ul>
+        {categoryData.map((category, index) => (
+          <li key={index}>
+            {category.topLabel && (
+              <div>
+                <h6 className="text-lg font-semibold">
+                  {formatCategoryName(category.category)}
+                </h6>
+                <p>{category.topLabel}</p>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
     </Card>
   );
 }
